@@ -171,6 +171,13 @@ svg { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: 
 .action-button strong { font-size: .68rem; }
 .action-button small { margin-top: 2px; color: var(--muted); font-size: .56rem; }
 .danger-action svg { color: var(--danger); }
+.end-game-button { display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%; min-height: 46px; margin-top: 2px; padding: 8px 12px; border: 1px solid rgba(216,132,121,.28); border-radius: 12px; color: #efb5ad; background: rgba(216,132,121,.055); cursor: pointer; transition: border-color 150ms ease, background 150ms ease, transform 150ms ease; }
+.end-game-button:hover { border-color: rgba(216,132,121,.55); background: rgba(216,132,121,.11); transform: translateY(-1px); }
+.end-game-button:active { transform: translateY(0); }
+.end-game-button svg { width: 17px; flex: 0 0 auto; color: var(--danger); }
+.end-game-button strong, .end-game-button small { display: block; }
+.end-game-button strong { font-size: .68rem; }
+.end-game-button small { margin-top: 2px; color: var(--muted); font-size: max(.56rem, 11px); }
 .keyboard-hint { margin: 3px 0 0; color: #657069; text-align: center; font-size: .58rem; }
 kbd { padding: 2px 5px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); background: rgba(255,255,255,.03); font: inherit; }
 

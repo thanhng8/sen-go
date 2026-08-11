@@ -94,6 +94,8 @@ const EN = {
   'action.scoreHint': 'End match',
   'action.resign': 'Resign',
   'action.resignHint': 'Concede match',
+  'action.endGame': 'End match',
+  'action.endGameHint': 'Choose setup again',
   'rules.kicker': 'How to play',
   'rules.title': 'Understand each rule set',
   'rules.intro': 'Choose a rule set for step-by-step play, ending conditions and a scoring example.',
@@ -159,9 +161,9 @@ const EN = {
   'font.monospace': 'Monospace',
   'common.close': 'Close',
   'common.cancel': 'Cancel',
-  'confirm.leaveTitle': 'Leave this match?',
-  'confirm.leaveCopy': 'Current match progress will be deleted.',
-  'confirm.leaveAccept': 'Leave match',
+  'confirm.leaveTitle': 'End the current match?',
+  'confirm.leaveCopy': 'Current progress will be discarded and you will return to match setup.',
+  'confirm.leaveAccept': 'End match',
   'confirm.finishTitle': 'Score the match now?',
   'confirm.finishCopy': 'Make sure dead groups have been captured. The current board will be scored.',
   'confirm.finishAccept': 'End and score',
@@ -278,6 +280,7 @@ const VI = {
   'action.undoHint': 'Một lượt', 'action.score': 'Tính điểm',
   'action.scoreHint': 'Kết thúc ván', 'action.resign': 'Đầu hàng',
   'action.resignHint': 'Nhường ván',
+  'action.endGame': 'Kết thúc ván', 'action.endGameHint': 'Chọn lại từ đầu',
   'rules.kicker': 'Hướng dẫn chơi',
   'rules.title': 'Hiểu đúng từng bộ luật',
   'rules.intro': 'Chọn một bộ luật để xem cách chơi từng bước, cách kết thúc và ví dụ tính điểm.',
@@ -325,9 +328,9 @@ const VI = {
   'font.auto': 'Tự động theo ngôn ngữ', 'font.system': 'Sans-serif hệ thống',
   'font.serif': 'Serif cổ điển', 'font.monospace': 'Chữ đơn cách',
   'common.close': 'Đóng', 'common.cancel': 'Hủy',
-  'confirm.leaveTitle': 'Rời ván hiện tại?',
-  'confirm.leaveCopy': 'Tiến trình của ván đấu này sẽ bị xóa.',
-  'confirm.leaveAccept': 'Rời ván',
+  'confirm.leaveTitle': 'Kết thúc ván hiện tại?',
+  'confirm.leaveCopy': 'Tiến trình hiện tại sẽ bị xóa và bạn sẽ quay về màn hình thiết lập.',
+  'confirm.leaveAccept': 'Kết thúc ván',
   'confirm.finishTitle': 'Tính điểm ngay?',
   'confirm.finishCopy': 'Hãy bảo đảm các nhóm chết đã được bắt. Bàn cờ hiện tại sẽ được tính điểm.',
   'confirm.finishAccept': 'Kết thúc và tính điểm',
@@ -369,7 +372,12 @@ const VI = {
   'error.aiFallback': 'Gọi API thất bại. Máy cục bộ đã đi thay ở lượt này.',
 };
 
-const localized = (values) => ({ ...EN, ...values });
+const localized = (values) => ({
+  ...EN,
+  ...values,
+  'action.endGame': values['action.endGame'] ?? values['confirm.leaveAccept'] ?? EN['action.endGame'],
+  'action.endGameHint': values['action.endGameHint'] ?? values['game.back'] ?? EN['action.endGameHint'],
+});
 
 const MESSAGES = {
   en: EN,

@@ -374,7 +374,7 @@ function startGame() {
 }
 
 function returnToSetup(force = false) {
-  if (!force && game && !game.gameOver && game.moveNumber > 0) {
+  if (!force && game && !game.gameOver) {
     openConfirmation({
       title: tr('confirm.leaveTitle'),
       copy: tr('confirm.leaveCopy'),
@@ -640,6 +640,7 @@ function bindControls() {
   $('#undo-button').addEventListener('click', handleUndo);
   $('#finish-button').addEventListener('click', requestFinish);
   $('#resign-button').addEventListener('click', requestResign);
+  $('#end-game-button').addEventListener('click', () => returnToSetup());
   $('#rules-info-button').addEventListener('click', () => openRuleGuide(matchSettings.ruleKey));
   $('#game-rule-guide').addEventListener('click', () => openRuleGuide(game?.ruleKey ?? matchSettings.ruleKey));
   document.querySelectorAll('[data-rule-tab]').forEach((tab) => {
