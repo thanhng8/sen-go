@@ -180,9 +180,11 @@ kbd { padding: 2px 5px; border: 1px solid var(--line); border-radius: 4px; color
 .game-credit a:hover { color: var(--text); text-decoration: underline; }
 .game-credit a:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; border-radius: 3px; }
 .game-credit svg { width: 13px; height: 13px; }
+.game-credit-setup { margin-top: 16px; }
+.game-credit-settings { margin-top: 14px; }
 
 @media (max-width: 680px) {
-  .game-credit { grid-column: 1 / -1; margin-top: 2px; }
+  .game-credit-game { grid-column: 1 / -1; margin-top: 2px; }
 }
 
 .modal-backdrop { position: fixed; inset: 0; z-index: 20; display: grid; padding: 20px; place-items: center; background: rgba(4,7,5,.72); backdrop-filter: blur(10px); opacity: 0; visibility: hidden; transition: opacity 180ms ease, visibility 180ms ease; }
