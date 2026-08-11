@@ -174,6 +174,17 @@ svg { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: 
 .keyboard-hint { margin: 3px 0 0; color: #657069; text-align: center; font-size: .58rem; }
 kbd { padding: 2px 5px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); background: rgba(255,255,255,.03); font: inherit; }
 
+.game-credit { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: auto; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); background: var(--surface-soft); font-size: max(.62rem, 12px); line-height: 1.4; }
+.game-credit > i { width: 3px; height: 3px; flex: 0 0 auto; border-radius: 50%; background: var(--gold); }
+.game-credit a { display: inline-flex; align-items: center; gap: 5px; color: var(--gold-light); font-weight: 700; text-decoration: none; text-underline-offset: 3px; transition: color 150ms ease; }
+.game-credit a:hover { color: var(--text); text-decoration: underline; }
+.game-credit a:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; border-radius: 3px; }
+.game-credit svg { width: 13px; height: 13px; }
+
+@media (max-width: 680px) {
+  .game-credit { grid-column: 1 / -1; margin-top: 2px; }
+}
+
 .modal-backdrop { position: fixed; inset: 0; z-index: 20; display: grid; padding: 20px; place-items: center; background: rgba(4,7,5,.72); backdrop-filter: blur(10px); opacity: 0; visibility: hidden; transition: opacity 180ms ease, visibility 180ms ease; }
 .modal-backdrop.is-visible { opacity: 1; visibility: visible; }
 .modal-card { position: relative; width: min(520px, 100%); padding: 30px; border: 1px solid var(--line-strong); border-radius: 22px; background: linear-gradient(145deg, #202923, #141b17); box-shadow: var(--shadow); }
