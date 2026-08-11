@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="vi" data-theme="dark" data-board-style="kaya" data-stone-style="classic">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0d120f" />
+    <meta name="description" content="SEN — game cờ vây Three.js chạy hoàn toàn trong trình duyệt." />
+    <title>SEN — Cờ Vây</title>
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <main id="setup-screen" class="setup-screen">
+      <section class="setup-shell">
+        <header class="brand-block">
+          <div class="brand-mark" aria-hidden="true">
+            <span class="brand-stone brand-stone-black"></span>
+            <span class="brand-stone brand-stone-white"></span>
+          </div>
+          <div>
+            <p class="eyebrow" data-i18n="brand.eyebrow">Trò chơi chiến lược cổ điển</p>
+            <h1>SEN <span>·</span> GO</h1>
+            <p class="brand-copy" data-i18n="brand.copy">Một bàn cờ tĩnh lặng. Vô vàn nước đi.</p>
+          </div>
+        </header>
+
+        <div class="setup-card">
+          <div class="setup-card-heading">
+            <div>
+              <p class="section-kicker" data-i18n="setup.kicker">Thiết lập ván đấu</p>
+              <h2 data-i18n="setup.title">Chọn cách bạn muốn chơi</h2>
+            </div>
+            <div class="setup-heading-actions">
+              <span class="local-badge"><i></i><span id="setup-runtime-label" data-i18n="setup.local">Chạy cục bộ</span></span>
+              <button id="settings-open-setup" class="settings-trigger settings-trigger-wide" type="button" data-i18n-aria-label="settings.open">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z" /></svg>
+                <span data-i18n="settings.button">Cài đặt</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="option-section">
+            <div class="option-title-row">
+              <h3 data-i18n="setup.boardSize">Kích thước bàn</h3>
+              <span id="board-size-hint">Ván cân bằng · 25–45 phút</span>
+            </div>
+            <div class="choice-grid choice-grid-three" data-choice-group="boardSize">
+              <button class="choice-card" type="button" data-value="9">
+                <strong>9 × 9</strong><small data-i18n="setup.beginner">Nhập môn</small>
+              </button>
+              <button class="choice-card is-selected" type="button" data-value="13">
+                <strong>13 × 13</strong><small data-i18n="setup.balanced">Cân bằng</small>
+              </button>
+              <button class="choice-card" type="button" data-value="19">
+                <strong>19 × 19</strong><small data-i18n="setup.standard">Tiêu chuẩn</small>
+              </button>
+            </div>
+          </div>
+
+          <div class="option-section">
+            <div class="option-title-row">
+              <h3 data-i18n="setup.opponent">Đối thủ</h3>
+              <span id="opponent-hint" data-i18n="setup.localHint">Không cần mạng hoặc API key</span>
+            </div>
+            <div class="choice-grid choice-grid-two opponent-choices" data-choice-group="opponentMode">
+              <button class="choice-card is-selected" type="button" data-value="local">
+                <strong data-i18n="setup.localComputer">Máy cục bộ</strong><small data-i18n="setup.localComputerCopy">Thuật toán có sẵn trong trình duyệt</small>
+              </button>
+              <button class="choice-card" type="button" data-value="ai">
+                <strong data-i18n="setup.apiAi">AI qua API</strong><small data-i18n="setup.apiAiCopy">Dùng gateway và model trong Settings</small>
+              </button>
+            </div>
+            <p id="ai-setup-status" class="ai-setup-status" aria-live="polite"></p>
+          </div>
+
+          <div class="setup-columns">
+            <div class="option-section">
+              <div class="option-title-row">
+                <h3 data-i18n="setup.yourColor">Quân của bạn</h3>
+                <span data-i18n="setup.blackFirst">Đen đi trước</span>
+              </div>
+              <div class="choice-grid choice-grid-two stone-choices" data-choice-group="playerColor">
+                <button class="choice-card is-selected" type="button" data-value="1">
+                  <span class="stone-preview stone-preview-black"></span>
+                  <span><strong data-i18n="color.blackStone">Quân Đen</strong><small data-i18n="setup.firstMove">Đi nước đầu tiên</small></span>
+                </button>
+                <button class="choice-card" type="button" data-value="2">
+                  <span class="stone-preview stone-preview-white"></span>
+                  <span><strong data-i18n="color.whiteStone">Quân Trắng</strong><small data-i18n="setup.komiHint">Nhận điểm Komi</small></span>
+                </button>
+              </div>
+            </div>
+
+            <div id="computer-difficulty-section" class="option-section">
+              <div class="option-title-row">
+                <h3 data-i18n="setup.difficulty">Cấp độ máy</h3>
+                <span id="difficulty-hint">Chiến thuật cân bằng</span>
+              </div>
+              <div class="choice-grid choice-grid-three compact-choices" data-choice-group="difficulty">
+                <button class="choice-card" type="button" data-value="easy">
+                  <strong data-i18n="difficulty.easy">Dễ</strong><small data-i18n="difficulty.relaxed">Thư giãn</small>
+                </button>
+                <button class="choice-card is-selected" type="button" data-value="medium">
+                  <strong data-i18n="difficulty.medium">Vừa</strong><small data-i18n="difficulty.normal">Phổ thông</small>
+                </button>
+                <button class="choice-card" type="button" data-value="hard">
+                  <strong data-i18n="difficulty.hard">Khó</strong><small data-i18n="difficulty.calculating">Tính toán</small>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="option-section rules-section">
+            <div class="option-title-row">
+              <h3 data-i18n="setup.rules">Luật chơi</h3>
+              <button id="rules-info-button" class="text-button" type="button" data-i18n="setup.ruleGuide">Hướng dẫn từng luật</button>
+            </div>
+            <div class="rule-select-wrap">
+              <select id="rule-select" data-i18n-aria-label="setup.selectRule">
+                <option value="japanese">Luật Nhật Bản · Lãnh thổ · Komi 6.5</option>
+                <option value="chinese">Luật Trung Quốc · Diện tích · Komi 7.5</option>
+                <option value="new-zealand">Luật New Zealand · Diện tích · Komi 7.0</option>
+              </select>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" /></svg>
+            </div>
+            <p id="rule-description" class="rule-description"></p>
+          </div>
+
+          <button id="start-game" class="primary-button" type="button">
+            <span data-i18n="setup.start">Bắt đầu ván đấu</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </button>
+          <p id="setup-footnote" class="setup-footnote" data-i18n="setup.footnote">Không tài khoản · Không máy chủ · Thuật toán chạy trong trình duyệt</p>
+        </div>
+      </section>
+    </main>
+
+    <main id="game-screen" class="game-screen" aria-hidden="true">
+      <header class="game-header">
+        <button id="back-to-setup" class="icon-button brand-mini" type="button" data-i18n-aria-label="game.back">
+          <span class="mini-stones"><i></i><i></i></span><strong>SEN</strong>
+        </button>
+        <div class="game-meta">
+          <span id="game-board-label">13 × 13</span><i></i>
+          <button id="game-rule-guide" class="game-rule-button" type="button" data-i18n-aria-label="game.openRuleGuide">
+            <span id="game-rule-label">Luật Nhật Bản</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M9.8 9a2.4 2.4 0 0 1 4.5 1.2c0 1.8-2.3 2-2.3 3.5M12 17h.01" /></svg>
+          </button>
+          <i></i><span id="game-level-label">Máy · Vừa</span>
+        </div>
+        <div class="game-header-actions">
+          <button id="settings-open-game" class="icon-button sound-button" type="button" data-i18n-aria-label="settings.open">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z" /></svg>
+          </button>
+          <button id="sound-toggle" class="icon-button sound-button" type="button" data-i18n-aria-label="game.sound">
+            <svg class="sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5ZM15 9.5a4 4 0 0 1 0 5M17.8 6.7a8 8 0 0 1 0 10.6" /></svg>
+            <svg class="sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 4 16 16M11 5 7.7 8.3M6 9H3v6h3l5 4v-5M16 9a4 4 0 0 1 .7 4.7M18 6.8a8 8 0 0 1 1 9.2" /></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="game-layout">
+        <section class="board-panel" data-i18n-aria-label="game.board">
+          <div id="board-container" class="board-container"></div>
+          <div id="board-message" class="board-message" role="status">
+            <span class="turn-stone turn-stone-black"></span><span id="board-message-text"></span>
+          </div>
+          <div id="toast" class="toast" role="alert"></div>
+        </section>
+
+        <aside class="side-panel">
+          <section class="turn-card">
+            <p class="panel-label" data-i18n="game.turnLabel">Đang tới lượt</p>
+            <div class="turn-main">
+              <span id="current-stone" class="large-stone large-stone-black"></span>
+              <div><h2 id="current-player-name"></h2><p id="turn-status"></p></div>
+            </div>
+            <div id="thinking-indicator" class="thinking-indicator" aria-hidden="true">
+              <i></i><i></i><i></i><span id="thinking-label" data-i18n="game.thinking">Máy đang tính nước đi</span>
+            </div>
+          </section>
+
+          <section class="score-card">
+            <div class="player-row" id="black-player-row">
+              <div class="player-identity"><span class="small-stone small-stone-black"></span><div><strong id="black-player-name"></strong><small data-i18n="color.blackStone">Quân Đen</small></div></div>
+              <div class="capture-count"><strong id="black-captures">0</strong><small data-i18n="game.captures">quân bắt</small></div>
+            </div>
+            <div class="score-divider"></div>
+            <div class="player-row" id="white-player-row">
+              <div class="player-identity"><span class="small-stone small-stone-white"></span><div><strong id="white-player-name"></strong><small data-i18n="color.whiteStone">Quân Trắng</small></div></div>
+              <div class="capture-count"><strong id="white-captures">0</strong><small data-i18n="game.captures">quân bắt</small></div>
+            </div>
+            <div class="komi-row"><span data-i18n="game.komi">Komi cho Trắng</span><strong id="komi-value">6.5</strong></div>
+          </section>
+
+          <section class="match-card">
+            <div><span data-i18n="game.move">Nước đi</span><strong id="move-number">0</strong></div>
+            <div><span data-i18n="game.consecutivePasses">Bỏ lượt liên tiếp</span><strong id="pass-count">0 / 2</strong></div>
+          </section>
+
+          <div class="action-grid">
+            <button id="pass-button" class="action-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M15 8l4 4-4 4" /></svg><span><strong data-i18n="action.pass">Bỏ lượt</strong><small>Pass</small></span></button>
+            <button id="undo-button" class="action-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7 4 12l5 5M5 12h8a6 6 0 0 1 6 6" /></svg><span><strong data-i18n="action.undo">Hoàn tác</strong><small data-i18n="action.undoHint">Một lượt</small></span></button>
+            <button id="finish-button" class="action-button" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4v16M5 5h11l-2 4 2 4H5" /></svg><span><strong data-i18n="action.score">Tính điểm</strong><small data-i18n="action.scoreHint">Kết thúc ván</small></span></button>
+            <button id="resign-button" class="action-button danger-action" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v18M6 4h11l-2 4 2 4H6" /></svg><span><strong data-i18n="action.resign">Đầu hàng</strong><small data-i18n="action.resignHint">Nhường ván</small></span></button>
+          </div>
+          <p class="keyboard-hint"><kbd>P</kbd> <span data-i18n="action.pass">bỏ lượt</span> · <kbd>U</kbd> <span data-i18n="action.undo">hoàn tác</span></p>
+        </aside>
+      </div>
+    </main>
+
+    <div id="rules-modal" class="modal-backdrop" aria-hidden="true">
+      <section class="modal-card rules-modal-card" role="dialog" aria-modal="true" aria-labelledby="rules-modal-title">
+        <button class="modal-close" type="button" data-close-modal="rules-modal" data-i18n-aria-label="common.close">×</button>
+        <p class="section-kicker" data-i18n="rules.kicker">Hướng dẫn chơi</p>
+        <h2 id="rules-modal-title" data-i18n="rules.title">Hiểu đúng từng bộ luật</h2>
+        <p class="rules-intro" data-i18n="rules.intro">Chọn một bộ luật để xem cách chơi từng bước, cách kết thúc và ví dụ tính điểm.</p>
+        <div class="common-rules" data-i18n-aria-label="rules.basics">
+          <div><span>1</span><p><strong data-i18n="rules.placeTitle">Đặt quân</strong><span data-i18n="rules.placeCopy">Đen đi trước; hai bên lần lượt đặt quân vào giao điểm trống.</span></p></div>
+          <div><span>2</span><p><strong data-i18n="rules.libertyTitle">Giữ khí</strong><span data-i18n="rules.libertyCopy">Nhóm hết giao điểm trống sát cạnh sẽ bị bắt khỏi bàn.</span></p></div>
+          <div><span>3</span><p><strong data-i18n="rules.territoryTitle">Chiếm đất</strong><span data-i18n="rules.territoryCopy">Bao quanh vùng trống và giữ các nhóm quân của mình sống.</span></p></div>
+        </div>
+        <div class="rules-tabs" role="tablist" data-i18n-aria-label="rules.select">
+          <button id="rule-tab-japanese" class="rule-tab is-active" type="button" role="tab" aria-selected="true" data-rule-tab="japanese"></button>
+          <button id="rule-tab-chinese" class="rule-tab" type="button" role="tab" aria-selected="false" data-rule-tab="chinese"></button>
+          <button id="rule-tab-new-zealand" class="rule-tab" type="button" role="tab" aria-selected="false" data-rule-tab="new-zealand"></button>
+        </div>
+        <div id="rule-guide-content" class="rule-guide-content" aria-live="polite"></div>
+        <p class="modal-note" data-i18n="rules.note">Game không tự đoán nhóm chết. Hãy bắt nhóm chết khỏi bàn trước khi tính điểm.</p>
+      </section>
+    </div>
+
+    <div id="settings-modal" class="modal-backdrop" aria-hidden="true">
+      <section class="modal-card settings-modal-card" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <button class="modal-close" type="button" data-close-modal="settings-modal" data-i18n-aria-label="common.close">×</button>
+        <div class="settings-heading">
+          <div><p class="section-kicker" data-i18n="settings.kicker">Tùy chỉnh trải nghiệm</p><h2 id="settings-title" data-i18n="settings.title">Cài đặt</h2></div>
+          <span id="settings-saved" class="settings-saved" role="status" data-i18n="settings.saved">Đã lưu tự động</span>
+        </div>
+        <p class="settings-intro" data-i18n="settings.intro">Thay đổi được áp dụng ngay và lưu trên trình duyệt này.</p>
+
+        <div class="settings-content">
+          <section class="settings-section">
+            <div class="settings-section-heading"><span class="settings-section-icon">文</span><div><h3 data-i18n="settings.language">Ngôn ngữ</h3><p data-i18n="settings.languageHint">Chọn ngôn ngữ hiển thị cho toàn bộ game.</p></div></div>
+            <label class="settings-field settings-field-full"><span data-i18n="settings.displayLanguage">Ngôn ngữ hiển thị</span><select id="settings-language"></select></label>
+          </section>
+
+          <section class="settings-section">
+            <div class="settings-section-heading"><span class="settings-section-icon">◐</span><div><h3 data-i18n="settings.appearance">Giao diện</h3><p data-i18n="settings.appearanceHint">Chọn theme và diện mạo bàn cờ.</p></div></div>
+            <div class="settings-grid settings-grid-three">
+              <label class="settings-field"><span data-i18n="settings.theme">Theme giao diện</span><select id="settings-theme"></select></label>
+              <label class="settings-field"><span data-i18n="settings.board">Nền bàn cờ</span><select id="settings-board-style"></select></label>
+              <label class="settings-field"><span data-i18n="settings.stones">Quân cờ</span><select id="settings-stone-style"></select></label>
+            </div>
+            <div id="appearance-preview" class="appearance-preview" aria-hidden="true"><div class="preview-board"><i></i><i></i><i></i><span class="preview-stone preview-stone-black"></span><span class="preview-stone preview-stone-white"></span></div></div>
+          </section>
+
+          <section class="settings-section">
+            <div class="settings-section-heading"><span class="settings-section-icon">AI</span><div><h3 data-i18n="settings.ai">AI qua API</h3><p data-i18n="settings.aiHint">Cấu hình gateway, khóa API và model dùng để chơi.</p></div></div>
+            <div class="settings-grid settings-grid-two">
+              <label class="settings-field"><span data-i18n="settings.aiProvider">Gateway API</span><select id="settings-ai-provider"></select></label>
+              <label class="settings-field"><span data-i18n="settings.aiModel">Tên model</span><input id="settings-ai-model" type="text" maxlength="200" autocomplete="off" spellcheck="false" data-i18n-placeholder="settings.aiModelPlaceholder" placeholder="Nhập chính xác tên model" /></label>
+            </div>
+            <label class="settings-field settings-field-block"><span data-i18n="settings.aiApiKey">Khóa API</span><input id="settings-ai-api-key" type="password" maxlength="1024" autocomplete="off" spellcheck="false" data-i18n-placeholder="settings.aiApiKeyPlaceholder" placeholder="Dán khóa API của gateway đã chọn" /></label>
+            <p class="settings-field-note" data-i18n="settings.aiStorageNote">Khóa và tên model được lưu trong localStorage trên máy tính này.</p>
+          </section>
+
+          <section class="settings-section">
+            <div class="settings-section-heading"><span class="settings-section-icon">Aa</span><div><h3 data-i18n="settings.typography">Chữ và khả năng đọc</h3><p data-i18n="settings.typographyHint">Tăng cỡ chữ hoặc đổi font và màu chữ.</p></div></div>
+            <div class="settings-grid settings-grid-two">
+              <label class="settings-field"><span data-i18n="settings.font">Tên font</span><select id="settings-font"></select></label>
+              <label class="settings-field text-size-field"><span><span data-i18n="settings.textSize">Cỡ chữ</span><output id="settings-font-size-value">20px</output></span><input id="settings-font-size" type="range" min="16" max="26" step="1" value="20" /></label>
+            </div>
+            <div class="text-color-row">
+              <label class="settings-field color-field"><span data-i18n="settings.textColor">Màu chữ chính</span><span class="color-input-wrap"><input id="settings-text-color" type="color" value="#f4f1e8" /><code id="settings-color-value">Tự động</code></span></label>
+              <div class="color-presets" data-i18n-aria-label="settings.colorPresets">
+                <button type="button" data-text-color="" class="color-swatch color-auto" data-i18n-aria-label="settings.colorAuto">A</button>
+                <button type="button" data-text-color="#ffffff" class="color-swatch" style="--swatch:#ffffff" aria-label="White"></button>
+                <button type="button" data-text-color="#f4e3b2" class="color-swatch" style="--swatch:#f4e3b2" aria-label="Warm cream"></button>
+                <button type="button" data-text-color="#d8f3e1" class="color-swatch" style="--swatch:#d8f3e1" aria-label="Soft green"></button>
+                <button type="button" data-text-color="#dcecff" class="color-swatch" style="--swatch:#dcecff" aria-label="Soft blue"></button>
+              </div>
+            </div>
+            <div class="font-preview"><small data-i18n="settings.preview">Xem trước</small><p data-i18n="settings.previewText">SEN — Một bàn cờ tĩnh lặng, vô vàn nước đi.</p></div>
+          </section>
+        </div>
+
+        <div class="settings-actions">
+          <button id="settings-reset" class="secondary-button" type="button" data-i18n="settings.reset">Khôi phục mặc định</button>
+          <button id="settings-done" class="primary-button small-primary" type="button" data-i18n="settings.done">Hoàn tất</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="confirm-modal" class="modal-backdrop" aria-hidden="true">
+      <section class="modal-card confirm-modal-card" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+        <div class="confirm-icon" id="confirm-icon">?</div><h2 id="confirm-title"></h2><p id="confirm-copy"></p>
+        <div class="modal-actions"><button id="confirm-cancel" class="secondary-button" type="button" data-i18n="common.cancel">Hủy</button><button id="confirm-accept" class="primary-button small-primary" type="button"></button></div>
+      </section>
+    </div>
+
+    <div id="result-modal" class="modal-backdrop" aria-hidden="true">
+      <section class="modal-card result-card" role="dialog" aria-modal="true" aria-labelledby="result-title">
+        <p id="result-eyebrow" class="section-kicker" data-i18n="result.ended">Ván đấu kết thúc</p>
+        <div id="result-emblem" class="result-emblem"><span></span></div><h2 id="result-title"></h2><p id="result-subtitle"></p>
+        <div id="result-score" class="result-score"><div><span class="small-stone small-stone-black"></span><small data-i18n="color.black">Đen</small><strong id="result-black-score">0</strong></div><i>—</i><div><span class="small-stone small-stone-white"></span><small data-i18n="color.white">Trắng</small><strong id="result-white-score">0</strong></div></div>
+        <p id="result-detail" class="result-detail"></p>
+        <div class="modal-actions result-actions"><button id="rematch-button" class="primary-button small-primary" type="button" data-i18n="result.rematch">Chơi lại</button><button id="change-setup-button" class="secondary-button" type="button" data-i18n="result.changeSetup">Đổi thiết lập</button></div>
+      </section>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
